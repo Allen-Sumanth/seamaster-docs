@@ -3,7 +3,7 @@
 Beyond walls and empty space, the grid contains several interactive entities.
 
 ## Algae (Resources)
-Algae is the primary resource in Ocean Master. It spawns randomly at the start of the match and does not regrow.
+Algae is the primary resource in Seawars. It spawns randomly at the start of the match and does not regrow.
 
 *   **Abundance**: Roughly 15% of the board tiles contain algae (~60 total).
 *   **Poisonous Algae**: About 5% of algae is **poisonous**.

@@ -1,6 +1,6 @@
-site_name: Ocean Master Documentation
+site_name: SeaWars Documentation
 theme:
-  name: readthedocs
+  name: material
   palette:
     scheme: slate
     primary: teal

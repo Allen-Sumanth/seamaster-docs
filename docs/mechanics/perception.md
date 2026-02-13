@@ -1,6 +1,6 @@
 # Perception
 
-Bots in Ocean Master are not omniscient. They operate under a "Fog of War".
+Bots in Seawars are not omniscient. They operate under a "Fog of War".
 
 ## Vision Radius
 Every bot has a standard **Vision Radius of 4 tiles**.

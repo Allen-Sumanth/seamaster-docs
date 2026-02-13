@@ -1,6 +1,6 @@
 # The Bot
 
-The Bot is the fundamental unit of Ocean Master. You do not control a single character; you control a swarm.
+The Bot is the fundamental unit of Seawars. You do not control a single character; you control a swarm.
 
 ## Stats
 Every bot shares the same base statistics:

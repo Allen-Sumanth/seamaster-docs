@@ -1,6 +1,6 @@
 # SDK Setup
 
-To play Ocean Master, you need to write a Python script that uses the `oceanmaster` library.
+To play Seawars, you need to write a Python script that uses the `oceanmaster` library.
 
 ## Prerequisites
 *   Python 3.10+
