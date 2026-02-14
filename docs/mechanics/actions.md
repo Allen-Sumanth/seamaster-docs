@@ -48,7 +48,8 @@ Bots can move in cardinal directions: `NORTH`, `SOUTH`, `EAST`, `WEST`.
 ## Scouting
 *   **Ability**: `SCOUT`
 *   **Cost**: 10 Scraps.
-*   **Effect**: Increases vision radius? Or allows identifying Poison? Ref: `abilities.md` says "can differentiate good and poison". Base bots might not distinguish poison? *[Clarification: `abilities.md` says "Scouting: will look at algae, can differentiate good and poison". This implies normal bots see "Algae" but don't know if it's poison. Scouts know. This is a huge strategic detail.]*
+*   **Effect**: Reveals the `is_poison` status of all algae within a **4-tile radius**. 
+*   **Note**: Without this ability (or proximity), algae status remains "UNKNOWN".
 
-> [!IMPORTANT]
-> Only bots with the **Scout** ability can distinguish Poisonous Algae from Safe Algae.
+!!! important
+    Only bots with the **Scout** ability can distinguish Poisonous Algae from Safe Algae. Global vision gives you coordinates, but Scouting gives you safety.

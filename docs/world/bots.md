@@ -6,16 +6,15 @@ The Bot is the fundamental unit of Seawars. You do not control a single characte
 Every bot shares the same base statistics:
 
 *   **Energy**: Starts at **50**. Consumed by movement and abilities.
-*   **Vision Radius**: **4 tiles**. Bots can only "see" entities within this range.
 *   **Inventory**: Can hold up to **5 Algae**.
 
 ## Construction & Cost
-Bots are modular. You build them by assigning **Abilities** to a chassis.
+Bots are designed as **modular units**. You start with an **Empty Shell** (chassis) and equip it with **Abilities**.
 
-*   **Base Cost**: 0 scraps (but effectively determined by abilities).
-*   **Minimum Cost**: 10 scraps (Since most functional bots need at least Movement or Vision, usually `Harvest` or `Scout` ability implies the base). *[Engine `validateSpawn` sums `CostDB`. `CostDB` values are e.g. Harvest=10, Scout=10. `game_info.md` mentions "base bots have vision, there’s a 10 scrap minimum cost".]*
+*   **Construction Cost**: The total cost to spawn a bot.
+*   **Formula**: `Total Cost = Base Cost + Sum(Ability Costs)`
 
-The total cost of a bot is the sum of its abilities.
+Currently, the **Base Cost** for the shell is **0 scraps**, meaning you only pay for the abilities you choose. However, a functional bot typically requires at least **Movement**, enforcing a practical minimum cost (e.g., 10 scraps).
 
 ## The Life Cycle
 1.  **Spawn**: You request a spawn at your designated spawn zone. Costs scraps.

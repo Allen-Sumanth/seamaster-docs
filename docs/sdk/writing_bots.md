@@ -57,5 +57,5 @@ class Patroller(BotController):
         pass
 ```
 
-> [!WARNING]
-> Global variables outside the class may reset or behave unexpectedly. Use `self` to store bot-specific memory.
+!!! warning
+    Global variables outside the class may reset or behave unexpectedly. Use `self` to store bot-specific memory.

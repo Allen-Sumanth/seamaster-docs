@@ -22,5 +22,5 @@ The game engine expects a specific structure. Your code **must** define:
 1.  **Bot Classes**: Classes inheriting from `BotController`.
 2.  **Spawn Policy**: A function `spawn_policy(api)` that returns a list of bots to spawn.
 
-> [!TIP]
-> Use the [Standard Templates](templates.md) as a starting point.
+!!! tip
+    Use the [Standard Templates](templates.md) as a starting point.

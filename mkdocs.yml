@@ -12,7 +12,7 @@ theme:
 
 nav:
   - Introduction: index.md
-  - The Arena (World):
+  - The Arena (Board):
     - The Board: world/board.md
     - Game Entities: world/entities.md
     - The Bot: world/bots.md
@@ -31,3 +31,9 @@ nav:
   - Strategy Guide: strategy/guide.md
   - Reference:
     - Glossary: reference/glossary.md
+
+markdown_extensions:
+  - attr_list
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences

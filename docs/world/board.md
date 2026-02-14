@@ -3,22 +3,26 @@
 The game is played on a fixed **20x20 grid**.
 
 ## Coordinates
-The board uses a standard Cartesian coordinate system:
-*   **Top-Left**: (0, 0) ? *Wait, engine implementation usually implies 0,0 is bottom-left or top-left depending on iteration order. `incrementLocation` in `engine.md` increments Y for "NORTH" and decrements for "SOUTH". This implies (0,0) is likely **Bottom-Left**.*
-*   **X-axis**: 0 to 19 (West to East).
-*   **Y-axis**: 0 to 19 (South to North).
+The board uses a standard Cartesian coordinate system where **(0,0)** is the corner.
 
-> [!NOTE]
-> `X` increases towards East. `Y` increases towards North.
+*   **X-axis**: 0 to 19.
+*   **Y-axis**: 0 to 19.
+
+!!! note
+    `X` is the horizontal axis. `Y` is the vertical axis.
 
 ## Walls
 The board contains static walls that block movement. Bots cannot move into or through walls.
 
-The wall layout is symmetric and predetermined:
-*   Walls exist at `x=6` and `x=13`.
-*   Walls exist at `y=6` and `y=13`.
-*   *(Specific gaps exist in these lines, creating a structured arena).*
+The wall layout is symmetric and predetermined.
 
 ## Spawning Zones
-*   **Player 1** spawns on the **Left** side (Lower X).
-*   **Player 2** spawns on the **Right** side (Higher X, `x=19` is hardcoded for P2 spawns in engine).
+Players spawn on **opposite sides** of the board.
+
+*   **Player 1 (You)**: Spawns on the edge where `x=0`.
+*   **Player 2 (Opponent)**: Spawns on the edge where `x=19`.
+
+!!! note
+    A helper function is currently work-in-progress to allow both players to treat their starting side as `x=0`. For now, be aware that Player 2 must calculate positions relative to `x=19`.
+
+When you spawn a bot using `spawn(location=y)`, it appears at coordinate `(0, y)` for Player 1, or `(19, y)` for Player 2. Valid `location` values are `0` to `19`.

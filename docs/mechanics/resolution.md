@@ -15,8 +15,8 @@ The Game Loop processes a tick in this order:
 ## Simultaneous Actions
 All bot actions for a turn are submitted at once, but processed sequentially by the engine.
 
-> [!WARNING]
-> The order in which bots are processed is **non-deterministic**.
+!!! warning
+    The order in which bots are processed is **non-deterministic**.
 
 If two bots attempt to move into the same empty square on the same tick:
 1.  The engine picks one bot (randomly/implementation defined).

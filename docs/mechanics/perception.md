@@ -1,29 +1,98 @@
-# Perception
+# Player View & Perception
 
-Bots in Seawars are not omniscient. They operate under a "Fog of War".
+Unlike many other strategy games, Seawars provides **Global Vision**. You have access to the entire game state through the `PlayerView` object, with one specific exception (Algae Poison Status).
 
-## Vision Radius
-Every bot has a standard **Vision Radius of 4 tiles**.
-This is a **Manhattan Distance** (or Chebyshev? *Engine code `VisionRadius = 4` is constant. The exact shape depends on implementation of `sense` functions which are in `ctx` (User code part). `engine.md` doesn't show the `sense` implementation, but typically in grid games it's Manhattan or Square. `user_code.md` uses `manhattan_distance`. I will assume Manhattan or Euclidean radius 4 implies a diamond or circle. The `VisionRadius` constant in engine is just an integer. The `Scout` ability implies "Scouting: will look at algae...". Let's assume standard grid visibility.*).
+## The PlayerView Object
 
-> [!NOTE]
-> For the purpose of strategy, assume you can see any entity within **4 steps** of your bot.
+Your bot logic receives a `PlayerView` object each tick. This object serves as the single source of truth for the game state.
 
-## What You Can See
-Within this radius, your bot receives data about:
-1.  **Terrain**: Walls and empty tiles.
-2.  **Resources**: Locations of **Algae** (and can distinguish **Poisonous** from Good).
-3.  **Entities**: Banks and Energy Pads.
-4.  **Other Bots**: Enemy and friendly bot locations and their stats (Energy, Scraps).
+### Global Fields
+*   **tick**: Current game tick (0 to 1000).
+*   **scraps**: Your current global currency count.
+*   **algae**: Your current score (total permanent algae secured).
+*   **bot_id_seed**: The starting ID for your next spawned bot.
+*   **bots**: A list of all your own alive bots with full status details.
 
-## Global Knowledge
-While bots have limited vision, your **Code** (the `BotController`) has access to some global state via the `GameAPI` or `Context`.
-*   [TODO] Clarify exactly what global info is available. *The engine `PlayerViewDTO` likely contains full board state for the player's bots. But usually, competitive games limit this.*
-*   **Assumption**: You only know what your aggregated bots can see. If you have no bots in an area, you cannot see algae or enemies there.
+### Visible Entities (Enemies & Scraps)
+The `visible_entities` field contains dynamic objects on the board.
 
-## Context Object
-Your bot's `act()` method receives a context object providing this sensory data.
-```python
-visible_algae = ctx.sense_algae(radius=4)
-enemies = ctx.sense_enemies_in_radius(radius=4)
+*   **Enemies (`visible_entities.enemies`)**: A list of **ALL** enemy bots currently on the board. You know their ID, Location, Scraps held, and Abilities.
+*   **Scraps (`visible_entities.scraps`)**: A list of scraps dropped on the ground from destroyed bots.
+
+### Permanent Entities (Map Features)
+The `permanent_entities` field contains static or semi-static map features.
+
+*   **Banks**: Locations of all banks.
+*   **Energy Pads**: Locations and status of energy pads.
+*   **Walls**: Locations of all wall tiles.
+*   **Algae (`permanent_entities.algae`)**: A list of **ALL** algae resource tiles on the board.
+
+### Structure Reference
+The `PlayerView` object follows this structure:
+
+```json
+{
+  "tick": "int",
+  "scraps": "int",
+  "algae": "int",           // Your total score
+  "bot_id_seed": "int",     // Next ID for your spawned bot
+  "max_bots": "int",
+  "width": "int",
+  "height": "int",
+  
+  "bots": {                 // Map of Your_Bot_ID -> Bot Object
+    "id": {
+      "id": "int",
+      "location": {"x": "int", "y": "int"},
+      "energy": "float",
+      "scraps": "int",
+      "abilities": ["str"], // ["HARVEST", "SCOUT", ...]
+      "algae_held": "int",
+      "status": "str"       // "ALIVE"
+    }
+  },
+
+  "visible_entities": {
+    "enemies": [            // List of ALL enemy bots
+      {
+        "id": "int",
+        "location": {"x": "int", "y": "int"},
+        "scraps": "int",
+        "abilities": ["str"]
+      }
+    ],
+    "algae": [              // List of ALL algae
+       {
+         "location": {"x": "int", "y": "int"},
+         "is_poison": "str" // "UNKNOWN" | "TRUE" | "FALSE"
+       }
+    ]
+  },
+
+  "permanent_entities": {
+     "banks": { "id": { ... } },      // Map of Bank_ID -> Bank Object
+     "energy_pads": { "id": { ... } }, // Map of Pad_ID -> Pad Object
+     "walls": [{"x": "int", "y": "int"}]
+  }
+}
 ```
+
+## The Poison Mechanic (Hidden Info)
+
+While you know the **location** of every algae tile from the start, you do not inherently know if it is safe or poisonous.
+
+### Algae Properties
+Each Algae object in `permanent_entities.algae` has an `is_poison` field with three possible values (defined in `AlgaeType`):
+1.  **"UNKNOWN"**: The default state. You know algae is there, but not if it's safe.
+2.  **"TRUE"**: Confirmed Poisonous.
+3.  **"FALSE"**: Confirmed Safe.
+
+### Revealing Poison (Scouting)
+To reveal the `is_poison` status, you must use the **Scout** ability.
+
+*   **Ability**: `SCOUT`
+*   **Range**: 4 tiles (Manhattan Distance).
+*   **Effect**: Any algae within **4 tiles** of a bot with the `SCOUT` ability will have its `is_poison` field updated to "TRUE" or "FALSE" in your `PlayerView`.
+
+!!! important
+    This is the only "Hidden Information" in the game. Enemy movement and map layout are fully visible.

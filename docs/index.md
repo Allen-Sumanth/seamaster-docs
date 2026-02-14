@@ -16,9 +16,9 @@ The winner is determined after **1000 ticks** (turns) based on who has collected
 
 Seawars is a **1v1 turn-based game**.
 
-*   **You write code**: You provide a Python class that controls your bots.
+*   **You write code**: You submit a Python script containing a bot controller class. This code defines your strategy for the entire match and cannot be changed once the game begins. Your bot's logic must autonomously guide its actions across all 1000 ticks of the game.
 *   **The Engine runs the match**: Your code is executed every tick alongside your opponent's code.
-*   **Real-time Logic**: You must make decisions about movement, spawning, and combat within strict time limits beforehand - once the engine starts running your code, the game is technically "out" of your hands.
+*   **Real-time Logic**: You must make decisions about movement, spawning, and combat within strict time limits.
 
 ## Getting Started
 
