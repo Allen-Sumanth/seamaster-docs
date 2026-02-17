@@ -14,13 +14,13 @@ theme:
 
 nav:
   - Introduction: index.md
-  - The Arena (Board):
+  - The Arena:
     - The Board: arena/board.md
     - Game Entities: arena/entities.md
     - The Bot: arena/bots.md
   - Game Mechanics:
-    - Perception (What You See): mechanics/perception.md
-    - Actions (What You Do): mechanics/actions.md
+    - Perception : mechanics/perception.md
+    - Actions & Abilities : mechanics/actions_and_abilities.md
     - Resolution Rules: mechanics/resolution.md
     - Winning the Game: mechanics/win_conditions.md
   - Bot Development (SDK):
@@ -30,8 +30,8 @@ nav:
     - Debugging & Logs: sdk/debugging.md
     - Submission: sdk/submission.md
     - API Reference: sdk/api_reference.md
-  - Reference:
-    - Glossary: reference/glossary.md
+  - Glossary:
+    - Glossary: glossary/glossary.md
 
 markdown_extensions:
   - attr_list

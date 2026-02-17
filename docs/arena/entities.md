@@ -28,38 +28,26 @@ Algae is the primary resource in Seawars. It spawns randomly at the start of the
     ```
 
 ## Banks
-Banks are secure locations where you can deposit harvested algae to make it "Permanent".
+Banks are locations where collected algae must be deposited to score points.
 
-*   **Count**: 4 Banks total.
-*   **Ownership**: 
-    *   2 Banks belong to **Player 1** (South side).
-    *   2 Banks belong to **Player 2** (North side).
-*   **Function**: Bots must stay at a bank for **100 ticks** to deposit their inventory.
-*   **Vulnerability**: While depositing, the algae is vulnerable to theft by bots with the **Lockpick** ability.
+*   **Functionality**: Bots with the harvest ability can deposit algae they are carrying into a bank.
+*   **Deposit Range**: A bot must be within **2 units** of a bank to deposit.
+*   **Deposit Time**: Depositing takes **50 ticks**, during which the bank is susceptible to being lockpicked by a bot with the lockpick ability.
 
-??? example "Finding Nearest Bank"
-    ```python linenums="1"
-    from seamaster.utils import manhattan_distance
+!!! note
+    A bot with the lockpick ability can steal the algae which is being deposited into the bank by the enemy player. This action takes 10 ticks (continuously, if the lockpick is interrupted in the middle, it needs to start again for 10 ticks).
 
-    def act(self):
-        my_loc = self.ctx.get_location()
-        banks = self.ctx.player_view.permanent_entities.banks
-        
-        # Sort banks by distance
-        nearest = sorted(banks.values(), key=lambda b: manhattan_distance(my_loc, b.location))[0]
-        
-        if nearest.bank_owner == self.ctx.bot.owner_id:
-             print(f"Heading to bank at {nearest.location}")
-    ```
+*   **Ownership**: There are two banks in each player's half of the map. The two banks closest to you are owned by you, and the two banks closest to your opponent are owned by the opponent. You can **only deposit algae in a bank you own**. Conversely, you can **only lockpick an opponent's bank**.
+*   **Coordinates**: You can find the exact list of bank coordinates in your `PlayerView` object under `permanent_entities.banks`.
+*   **Reference**: See [Player View & Perception](../mechanics/perception.md) for data structure details.
 
 ## Energy Pads
-Energy Pads are refill stations for your bots. All bots spawn with limited energy and must recharge to keep moving/acting.
+Energy pads are special locations that refill a bot's energy.
 
-*   **Count**: 2 Energy Pads (Located near the center).
-*   **Function**: Moving onto an active pad instantly refills a bot's energy to max (50).
-*   **Cooldown**: After use, the pad becomes inactive for a duration.
-    *   **Early Game**: 50 ticks cooldown.
-    *   **Mid/Late Game**: Cooldown decreases as the match progresses (down to 10 ticks).
+*   **Functionality**: When a bot stands on an energy pad, its energy is restored to the spawn energy level.
+*   **Cooldown**: After use, an energy pad goes on cooldown for **25 ticks** and cannot be used again until the cooldown expires.
+*   **Coordinates**: You can find the exact list of energy pad coordinates in your `PlayerView` object under `permanent_entities.energypads`.
+*   **Reference**: See [Player View & Perception](../mechanics/perception.md) for data structure details.
 
 ??? example "Checking Energy Pad Availability"
     ```python linenums="1"

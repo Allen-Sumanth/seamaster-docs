@@ -17,7 +17,7 @@ Your bot logic receives a `PlayerView` object each tick. This object serves as t
     ```
 
 ### Global Fields
-*   **tick**: Current game tick (0 to 1000).
+*   **tick**: Current game tick (0 to 500).
 *   **scraps**: Your current global currency count.
 *   **algae**: Your current score (total permanent algae secured).
 *   **bot_id_seed**: The starting ID for your next spawned bot.

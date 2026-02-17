@@ -12,16 +12,30 @@ The Game Loop processes a tick in this order:
 3.  **Entity Updates**: Banks and Energy Pads update their timers.
 4.  **Win Check**: Victory conditions are checked.
 
-## Simultaneous Actions
-All bot actions for a turn are submitted at once, but processed sequentially by the engine.
+## Action Resolution
+The engine resolves actions based on a strict priority system. When multiple bots attempt actions in the same tick, they are processed in the following order:
 
-!!! warning
-    The order in which bots are processed is **non-deterministic**.
+??? info
+    Each bot can only perform one move per tick. Some actions, such as `HARVEST` and `LOCKPICK`, have an option where the bot can move to a location and perform the action, essentially allowing the bot to perform two 'actions' (move and harvest/lockpick) in the same tick.
 
-If two bots attempt to move into the same empty square on the same tick:
-1.  The engine picks one bot (randomly/implementation defined).
-2.  That bot moves successfully.
-3.  The second bot attempts to move, sees the square is now `Occupied`, and the move **fails**.
+### 1. Priority Tiers
+Actions with higher priority numbers are resolved first.
+
+| Priority | Action |
+| :--- | :--- |
+| **6** | `SELFDESTRUCT` |
+| **5** | `HARVEST` |
+| **4** | `POISON` |
+| **3** | `DEPOSIT` |
+| **2** | `LOCKPICK` |
+| **1** | `MOVE` |
+
+### 2. Tie-Breakers
+If multiple bots want to perform actions with the **same priority** (e.g., two bots trying to Move into the same tile), the engine resolves the conflict using these tie-breakers, in order:
+
+1.  **Energy**: Bot with **Higher Energy** goes first.
+2.  **Age**: Bot that was **Spawned Earlier** (lower Bot ID) goes first.
+3.  **Random**: If Energy and Age are identical, it is determined randomly.
 
 ## Collision
 *   **Bots cannot share a tile.**

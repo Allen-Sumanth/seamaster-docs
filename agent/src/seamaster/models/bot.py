@@ -20,7 +20,6 @@ class Bot:
     algae_held: int
     traversal_cost: float
     status: str
-    vision_radius: float
 
     @classmethod
     def from_dict(cls, data: dict):

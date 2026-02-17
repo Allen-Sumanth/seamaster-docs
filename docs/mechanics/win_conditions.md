@@ -8,17 +8,16 @@ If at any point a player has permanently deposited **> 50%** of the total algae 
 
 ## 2. Time Limit
 If the game reaches **1000 Ticks**:
+
 *   The game ends.
 *   **Winner**: Information based on **Permanent Algae** count.
     *   Player with most deposited algae wins.
-    *   If tied, it interprets as a Draw (or potentially falls back to total assets, but standard rule is Draw).
+    *   If tied, it interprets as a Draw.
 
-## 3. Disqualification
-If a player's bot code crashes or times out consecutively (e.g., 5 times in a row):
-*   **Result**: That player loses immediately.
+## 3. Timeout
+The Code Runner maintains a **Timeout Score** for each bot.
 
-## Economy Strategy
-Winning requires a balance:
-*   **Harvesting**: To deny enemy resources.
-*   **Banking**: To secure points (Harvested algae in inventory does NOT count for the win until deposited!).
-*   **Combat**: To drain enemy scraps and energy.
+*   **Timeout Event**: If a bot's code times out or crashes, its Timeout Score increases.
+*   **Normal Execution**: If the bot executes successfully, its Timeout Score decreases (or stays at 0).
+*   **Disqualification**: If the **Timeout Score reaches 5**, the match ends immediately, and that player loses.
+

@@ -1,5 +1,5 @@
 ---
-trigger: always_on
+trigger: manual
 ---
 
 The general prompt guidelines are in the agent/ directory. The directory contains all the relevant source code in order to write the documentation for the game. The agent/ directory contains two folders, which are in itself repositories: 

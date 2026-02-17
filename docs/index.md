@@ -10,13 +10,13 @@ You are the commander of a fleet of automated bots. Your mission is to dominate 
 2.  **Banking Resources**: Securely depositing algae to score permanent points.
 3.  **Combat**: Destroying enemy bots to deny them resources.
 
-The winner is determined after **1000 ticks** (turns) based on who has collected the most algae, or immediately if a player captures (harvests and succefully deposits in their own banks) **>50%** of the total algae on the map.
+The winner is determined after **500 ticks** (turns) based on who has collected the most algae, or immediately if a player captures (harvests and succefully deposits in their own banks) **>50%** of the total algae on the map. See [Win Conditions](mechanics/win_conditions.md) for more details.
 
 ## How It Works
 
 Seawars is a **1v1 turn-based game**.
 
-*   **You write code**: You submit a Python script containing a bot controller class. This code defines your strategy for the entire match and cannot be changed once the game begins. Your bot's logic must autonomously guide its actions across all 1000 ticks of the game.
+*   **You write code**: You submit a Python script containing a bot controller class. This code defines your strategy for the entire match and cannot be changed once the game begins. Your bot's logic must autonomously guide its actions across all 500 ticks of the game.
 *   **The Engine runs the match**: Your code is executed every tick alongside your opponent's code.
 *   **Real-time Logic**: You must make decisions about movement, spawning, and combat within strict time limits.
 
