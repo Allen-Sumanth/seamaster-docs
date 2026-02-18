@@ -22,6 +22,6 @@ Seawars is a **1v1 turn-based game**.
 
 ## Getting Started
 
-1.  Read about [The Board](world/board.md) and [Game Entities](world/entities.md) to understand the environment.
-2.  Learn the [Rules of Perception](mechanics/perception.md) and [Actions](mechanics/actions.md).
+1.  Read about [The Board](arena/board.md) and [Game Entities](arena/entities.md) to understand the environment.
+2.  Learn the [Rules of Perception](mechanics/perception.md) and [Actions](mechanics/actions_and_abilities.md).
 3.  Jump into the [SDK Guide](sdk/writing_bots.md) to write your first bot.
