@@ -5,6 +5,11 @@ A bot consists of two parts: the **Brain** (Logic) and the **Birth** (Spawn Poli
 ## 1. The Brain (`BotController`)
 You define a class that inherits from `BotController`. The `act()` method is called every tick.
 
+You can either write your own bot logic from scratch or utilize one of the pre-built templates available in `seamaster.templates`.
+
+!!! bug "Work in Progress"
+    The `Lurker` and `Saboteur` templates are currently under development and are not stable for use.
+
 ```python linenums="1"
 from seamaster.botbase import BotController
 from seamaster.constants import Ability, Direction
@@ -27,7 +32,7 @@ class MyHarvester(BotController):
 ```
 
 ## 2. The Birth (`spawn_policy`)
-You must tell the engine **when** to correct bots.
+You must tell the engine when and where to spawn bots in each tick.
 
 ```python linenums="1"
 def spawn_policy(api):
@@ -56,6 +61,3 @@ class Patroller(BotController):
         # Use and update self.direction
         pass
 ```
-
-!!! warning
-    Global variables outside the class may reset or behave unexpectedly. Use `self` to store bot-specific memory.

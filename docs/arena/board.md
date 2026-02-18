@@ -21,10 +21,10 @@ The board contains static walls that block movement. Bots cannot move into or th
 ## Spawning Zones
 Players spawn on **opposite sides** of the board.
 
-*   **Player 1 (You)**: Spawns on the edge where `x=0`.
-*   **Player 2 (Opponent)**: Spawns on the edge where `x=19`.
+*   **Player 1 (You)**: Spawns on the edge where `y=0`.
+*   **Player 2 (Opponent)**: Spawns on the edge where `y=19`.
 
-!!! info
-    A helper function is currently work-in-progress to allow both players to treat their starting side as `x=0`. For now, be aware that Player 2 must calculate positions relative to `x=19`.
+!!! note "Coordinate Flipping"
+    To ensure fairness and simplicity, the engine **flips the x-coordinates** for Player 2. This means both players can write logic assuming they are on the "left" (or "right", depending on perspective), but their actual positions on the grid are mirrored.
 
-When you spawn a bot using `spawn(location=y)`, it appears at coordinate `(0, y)` for Player 1, or `(19, y)` for Player 2. Valid `location` values are `0` to `19`.
+When you spawn a bot using `spawn(location=x)`, it appears at coordinate `(x, 0)` for Player 1, or `(x, 19)` for Player 2. Valid `location` values are `0` to `19`.

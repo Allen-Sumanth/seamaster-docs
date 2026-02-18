@@ -28,8 +28,11 @@ nav:
     - Writing Your Bot: sdk/writing_bots.md
     - Build Your First Bot: sdk/first_bot.md
     - Debugging & Logs: sdk/debugging.md
-    - Submission: sdk/submission.md
-    - API Reference: sdk/api_reference.md
+  - API Reference:
+    - GameAPI: api_reference/game_api.md
+    - BotController: api_reference/bot_controller.md
+    - BotContext: api_reference/bot_context.md
+    - Utilities: api_reference/utilities.md
   - Glossary:
     - Glossary: glossary/glossary.md
 

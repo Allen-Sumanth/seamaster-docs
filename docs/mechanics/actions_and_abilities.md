@@ -69,15 +69,12 @@ Bots can move in cardinal directions: `NORTH`, `SOUTH`, `EAST`, `WEST`.
 
 ??? example "Harvesting Example"
     ```python linenums="1" hl_lines="9"
-    from seamaster.constants import Ability, Direction
-    from seamaster.translate import perform
+    from seamaster.constants import Direction
+    from seamaster.translate import harvest
 
     def act(self):
-        # 1. Standard Harvest (Current Tile)
-        # return harvest()
-
-        # 2. Move + Harvest (Adjacent Tile)
-        # return harvest(direction=Direction.NORTH)
+        # Move + Harvest (Adjacent Tile)
+        return harvest(Direction.NORTH)
     ```
 
 ### Deposit
@@ -89,12 +86,12 @@ Bots can move in cardinal directions: `NORTH`, `SOUTH`, `EAST`, `WEST`.
 
 ??? example "Banking Example"
     ```python linenums="1"
-    from seamaster.translate import perform_bank
+    from seamaster.translate import deposit
 
     def act(self):
         # If we are at a bank we own, deposit
         if self.ctx.is_at_bank():
-            return perform_bank()
+            return deposit(None)
     ```
 
 ### Self-Destruct
@@ -116,6 +113,7 @@ Bots can move in cardinal directions: `NORTH`, `SOUTH`, `EAST`, `WEST`.
 ??? example "Lockpick Example"
     ```python linenums="1"
     from seamaster.translate import lockpick
+    from seamaster.constants import Direction
 
     def act(self):
         # Move adjacent to bank and start lockpicking
@@ -132,11 +130,12 @@ Bots can move in cardinal directions: `NORTH`, `SOUTH`, `EAST`, `WEST`.
 
 ??? example "Poison Example"
     ```python linenums="1"
+    from seamaster.constants import Direction
     from seamaster.translate import poison
 
     def act(self):
         # Move South and poison the algae there
-        return poison(direction=Direction.SOUTH)
+        return poison(Direction.SOUTH)
     ```
 
 ---
@@ -152,16 +151,7 @@ Abilities are special upgrades or traits that your bots can possess:
 *   **Description**: Reveals the `is_poison` status of all algae within a **4-tile radius**.
 *   **Note**: Without this ability (or proximity), algae status remains "UNKNOWN". Only bots with the **Scout** ability can distinguish Poisonous Algae from Safe Algae. Global vision gives you coordinates, but Scouting gives you safety.
 
-??? example "Scouting Example"
-    ```python linenums="1"
-    from seamaster.constants import Ability
-    from seamaster.translate import perform
 
-    def act(self):
-        # If near unknown algae, use SCOUT
-        if self.ctx.sense_unknown_algae(radius=4):
-            return perform(Ability.SCOUT)
-    ```
 
 ### Self-Destruct
 *   **Description**: Allows the bot to self-destruct, dealing area damage.

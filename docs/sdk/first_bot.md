@@ -1,89 +1,117 @@
-# Build Your First Bot (Using Templates)
+# Build Your First Bot (Custom Logic)
 
-This guide will walk you through creating a bot by leveraging the power of **Templates**. Instead of writing complex logic from scratch, we will extend the existing `Forager` template to get a fully functional bot in just a few lines of code.
+In this guide, we will write a complete bot from scratch. While the `seamaster` library provides powerful **Templates** (see [Writing Your Bot](writing_bots.md)), writing your own logic gives you maximum control.
 
-## 1. Setup
-Create a new file `user.py` in your project root.
+We will build a **Harvester Bot** that autonomousy manages its energy, harvests algae, and deposits it at a bank.
 
-## 2. Using the Forager Template
-The `seamaster` library includes several pre-built templates. The **Forager** is an advanced bot that handles:
-*   **Harvesting**: Automatically finding and collecting algae.
-*   **Banking**: Depositing resources when inventory is full.
-*   **Charging**: Finding energy pads when low on energy.
+!!! tip "Copy-Paste Friendly"
+    The code blocks in this guide have aligned line numbers. You can copy and paste them sequentially into your file to build the complete bot.
 
-Instead of re-writing this logic, we just import it!
+## 1. Imports and Setup
+Create a new file `my_first_bot.py`. We start by importing the necessary components from the library.
 
-```python linenums="1" hl_lines="1 3 9 31"
-from seamaster.templates.forager import Forager  # (1)
+```python linenums="1"
+from seamaster import GameAPI
+from seamaster.botbase import BotController
+from seamaster.constants import Ability, ABILITY_COSTS, SCRAP_COSTS, Direction
+from seamaster.models import EnergyPad, Bank
+from seamaster.translate import move, harvest, deposit
+from seamaster import utils
+import random
+```
 
-class MyFirstBot(Forager):  # (2)
-    """
-    My custom bot that extends the Forager template.
-    We can add custom logic here later, but for now, 
-    we just rely on the robust Forager behavior.
-    """
-    def __init__(self, ctx, args=None):
-        super().__init__(ctx, args)
-        # Custom initialization can go here
+## 2. Defining the Bot Class
+We inherit from `BotController` and define our capabilities.
 
+```python linenums="9" hl_lines="2"
+class harvester_bot(BotController):
+    ABILITIES = [Ability.HARVEST]  # (1)
+    ability_scrap_cost = SCRAP_COSTS[Ability.HARVEST]
+    ability_energy_cost = ABILITY_COSTS[Ability.HARVEST] 
+
+    def __init__(self, ctx):
+        super().__init__(ctx)
+```
+
+1.  **Capabilities**: We declare that this bot needs the `HARVEST` ability. The game engine uses this to calculate spawn costs.
+
+## 3. The Brain (`act`)
+The `act()` method is the heart of your bot. It runs every tick. Our logic follows a simple priority system:
+
+1.  **Survival**: If energy is low, find a charger.
+2.  **Banking**: If carrying *any* algae, go deposit immediately.
+3.  **Work**: Otherwise, find algae and harvest.
+
+```python linenums="17"
     def act(self):
-        # run the default forager logic
-        return super().act()  # (3)
+        # 1. Survival: If energy is below 50%, head to recharge ports
+        current_energy = self.ctx.get_energy()
+        if current_energy < 25:
+            nearest_energy_pad : EnergyPad = self.ctx.get_nearest_energy_pad()
+            # Calculate path to energy pad
+            move_priorities = utils.get_optimal_next_hops(self.ctx.get_location(), nearest_energy_pad.location) # (1)
+            if move_priorities:
+                return move(move_priorities[0]) # (2)
 
-def spawn_policy(api):
-    """
-    Called every tick. Returns a list of spawn commands.
-    """
-    spawns = []
-    
-    # Check if we can afford to spawn (using the parent class method)
-    if MyFirstBot.can_spawn(api):  # (4)
-        spawns.append({
-            "strategy": MyFirstBot,
-            "location": 0, # Spawn at y=0
-            "extra_abilities": []
-        })
+        # 2. Banking: If I'm carrying algae, deposit it
+        if self.ctx.get_algae_held() > 0:
+            # Find banks owned by me
+            banks: list[Bank] = {
+                bank for bank in self.ctx.api.banks() 
+                    if bank.is_bank_owner == True
+            }
+            if banks:
+                # Find nearest bank
+                nearest_bank: Bank = min(banks, key=lambda bank: utils.manhattan_distance(self.ctx.get_location(), bank.location))
+                dist_to_bank = utils.get_shortest_distance_between_points(self.ctx.get_location(), nearest_bank.location)
+                
+                # If adjacent, deposit. Else, move towards it.
+                if not dist_to_bank or dist_to_bank < 2:
+                    return deposit(utils.direction_from_point(self.ctx.get_location(), nearest_bank.location)) # (3)
+                else:   
+                    move_priorities = utils.get_optimal_next_hops(self.ctx.get_location(), nearest_bank.location)
+                    if move_priorities:
+                        return move(move_priorities[0])
+
+        # 3. Work: Find and harvest algae
+        nearest_algae = self.ctx.get_nearest_algae()
+        dist_to_algae = utils.manhattan_distance(self.ctx.get_location(), nearest_algae.location)
         
-    return spawns
+        if dist_to_algae >= 2:
+            alg_move_priorities = utils.get_optimal_next_hops(self.ctx.get_location(), nearest_algae.location)
+            if alg_move_priorities:
+                return move(alg_move_priorities[0])
+        elif dist_to_algae < 2 and dist_to_algae > 0:
+            return harvest(utils.direction_from_point(self.ctx.get_location(), nearest_algae.location)) # (4)
+        else: 
+            return harvest(None)
 ```
 
-1.  **Import**: Bring in the pre-built `Forager` template to start with distinct behaviors.
-2.  **Inherit**: Subclassing `Forager` gives your bot all its state machine logic (harvesting, banking, charging) for free.
-3.  **Extend**: You can add your own logic before calling `super().act()`, or replace it entirely.
-4.  **Spawn**: Use the template's helper method to check if you have enough energy to pay the spawn cost.
+1.  **Pathfinding**: `utils.get_optimal_next_hops` helps navigate around obstacles.
+2.  **Action**: We execute the move command.
+3.  **Deposit**: Uses `direction_from_point` to target the specific bank tile.
+4.  **Harvest**: Targeted harvest ensures we grab the specific algae we want.
 
-## 4. Running Your Bot
-Submit the final code by pasting it into the editor in the battle page.mk
+## 4. The Spawn Policy
+Finally, we tell the engine to create our bots.
 
-## What just happened?
-By inheriting from `Forager`, your bot immediately gained the following behaviors:
+```python linenums="54" hl_lines="8"
+def spawn_policy(gameAPI: GameAPI):
+    # Spawn a harvester in every tick
+    spawn_rules = [] 
 
-1.  **Automated State Machine**: The bot automatically switches between three internal states:
-    *   **Active**: Hunts for visible algae and scraps. It scans an expanding radius (from 2 up to 10 tiles) to find the nearest resource and moves towards it.
-    *   **Depositing**: When the bot collects **5+ algae**, it automatically locks onto the nearest Bank and moves to deposit.
-    *   **Charging**: If energy drops below **10 units**, it pauses harvesting and routes to the nearest Energy Pad to recharge.
-
-2.  **Smart Navigation**: It uses `ctx.move_target()`, which leverages pre-computed shortest paths to navigate around walls. It also performs collision checking to ensure it doesn't walk into walls or other bots.
-
-3.  **Economic Logic**: It completes the full economic loop (Harvest -> Bank -> Recharge) without you writing a single line of logic. Default abilities (`HARVEST`, `SCOUT`, `DEPOSIT`) are automatically configured.
-
-## Customizing Your Bot
-Now that you have a working base, you can override `act()` to add specific behaviors:
-
-```python linenums="29" hl_lines="6"
-    def act(self):
-        # 1. Custom: If we see an enemy, maybe run away?
-        enemies = self.ctx.sense_enemies()
-        if enemies:
-             # Add custom flee logic here
-             pass
-
-        # 2. Fallback to default Forager behavior
-        return super().act()
+    # spawn a harvester at a random X location
+    spawn_x = random.randint(0, gameAPI.view.width-1)
+    spawn_rules.append(harvester_bot.spawn(spawn_x)) # (1)
+    return spawn_rules
 ```
 
-## Conclusion
-Building a Forager is just the beginning. The `seamaster` library is designed with a **flexible hierarchy**, giving you complete control over your bot's behavior.
+1.  **Spawn**: We invoke the `spawn` class method on our custom bot class.
 
-You can mix and match templates, override specific methods (like `act`, `move_target`, or `can_spawn`), or build entirely new strategies from the ground up by inheriting directly from `BotController`. Whether you're optimizing for economy, aggression, or pure survival, the library provides the building blocks—how you assemble them is limited only by your imagination.
+## Next Steps
+Congratulations! You've written a custom bot from scratch. 
 
+To go further:
+
+*   Explore **[Writing Your Bot](writing_bots.md)** for detailed API documentation.
+*   Learn about **Collision Resolution** in [Resolution Rules](../mechanics/resolution.md).

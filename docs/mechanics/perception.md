@@ -31,7 +31,7 @@ The `visible_entities` field contains dynamic objects on the board.
 
 ??? example "Filtering Enemies"
     ```python linenums="1"
-    from oceanmaster.constants import Ability
+    from seamaster.constants import Ability
 
     def act(self):
         enemies = self.ctx.player_view.visible_entities.enemies

@@ -17,6 +17,8 @@ class GameAPI:
     GameAPI provides methods to interact with the game state.
     """
 
+    view: PlayerView
+
     def __init__(self, view: PlayerView):
         self.view = view
 
@@ -27,6 +29,9 @@ class GameAPI:
         returnType: int
         """
         return self.view.tick
+
+    def get_max_energy(self) -> int:
+        return 50
 
     def get_scraps(self) -> int:
         """

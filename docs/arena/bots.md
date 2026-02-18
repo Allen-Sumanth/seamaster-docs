@@ -5,7 +5,7 @@ The Bot is the fundamental unit of Seawars. You do not control a single characte
 ## The Bot Object
 `Bot` objects are the core data structure representing your units.
 
-```python
+```python linenums="1"
 class Bot:
     id: int
     location: Point

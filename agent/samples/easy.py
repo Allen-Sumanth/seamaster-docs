@@ -28,14 +28,14 @@ class Custom_Bot_Name(BotController):
 def spawn_policy(api):
     policy = []
     tick = api.get_tick()
-    it = 0;
+    it = 0
     # ZONE 1
     # for the first 50 ticks spawn scouts every 5 ticks ->10 scouts
     if tick < 50 and tick % 5==0:
         policy.append(FlashScout.spawn(location=it))
         it = it+1
     
-    
+        
     # ZONE 2
     # spawn a forager every 10 ticks and a saboteur every 15 ticks
     if tick > 50 and tick<120:
