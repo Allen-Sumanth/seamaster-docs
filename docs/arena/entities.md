@@ -31,11 +31,11 @@ Algae is the primary resource in Seawars. It spawns randomly at the start of the
 Banks are locations where collected algae must be deposited to score points.
 
 *   **Functionality**: Bots with the harvest ability can deposit algae they are carrying into a bank.
-*   **Deposit Range**: A bot must be within **2 units** of a bank to deposit.
-*   **Deposit Time**: Depositing takes **50 ticks**, during which the bank is susceptible to being lockpicked by a bot with the lockpick ability.
+*   **Deposit Range**: A bot must be within **1 unit** of a bank to deposit.
+*   **Deposit Time**: The first bot to perform a deposit starts a **50 ticks** timer during which the bank is susceptible to being lockpicked by a bot with the lockpick ability. While a bank is undergoing a deposit, other harvesters of yours can also perform a deposit without affecting the final deposit time. 
 
 !!! note
-    A bot with the lockpick ability can steal the algae which is being deposited into the bank by the enemy player. This action takes 10 ticks (continuously, if the lockpick is interrupted in the middle, it needs to start again for 10 ticks).
+    A bot with the LOCKPICK ability can steal the algae which is being deposited into the bank by the enemy player. This action takes 10 ticks (continuously, if the lockpick is interrupted in the middle, it needs to start again for 10 ticks).
 
 *   **Ownership**: There are two banks in each player's half of the map. The two banks closest to you are owned by you, and the two banks closest to your opponent are owned by the opponent. You can **only deposit algae in a bank you own**. Conversely, you can **only lockpick an opponent's bank**.
 *   **Coordinates**: You can find the exact list of bank coordinates in your `PlayerView` object under `permanent_entities.banks`.
