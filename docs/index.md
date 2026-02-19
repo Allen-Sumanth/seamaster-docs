@@ -7,6 +7,7 @@
     ```bash
     pip install --upgrade seamaster
     ```
+    Check [Changelog](changelog.md) for more details.
     *   The default maximum health of a bot has been increased from **50** to **100**. Please update your bots to account for this change.
     *   The Lurker and Saboteur template bots are currently under development. Check [Writing Bots](sdk/writing_bots.md) for more details.
 
