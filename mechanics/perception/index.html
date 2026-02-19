@@ -1439,16 +1439,20 @@
 <h2 id="the-poison-mechanic-hidden-info">The Poison Mechanic (Hidden Info)</h2>
 <p>While you know the <strong>location</strong> of every algae tile from the start, you do not inherently know if it is safe or poisonous.</p>
 <h3 id="algae-properties">Algae Properties</h3>
-<p>Each Algae object in <code>permanent_entities.algae</code> has an <code>is_poison</code> field with three possible values (defined in <code>AlgaeType</code>):
-1.  <strong>"UNKNOWN"</strong>: The default state. You know algae is there, but not if it's safe.
-2.  <strong>"TRUE"</strong>: Confirmed Poisonous.
-3.  <strong>"FALSE"</strong>: Confirmed Safe.</p>
+<p>Each Algae object in <code>permanent_entities.algae</code> has an <code>is_poison</code> field with three possible values (defined in <code>AlgaeType</code>):<br />
+1.  <strong>"UNKNOWN"</strong>: The default state. You know algae is there, but not if it's safe. <br />
+2.  <strong>"TRUE"</strong>: Confirmed Poisonous. <br />
+3.  <strong>"FALSE"</strong>: Confirmed Safe. </p>
+<div class="admonition note">
+<p class="admonition-title">Poison ability</p>
+</div>
+<p>The algae properties are updated when scouts go near the algae. It does not take into account when the opponent uses their poison ability.</p>
 <h3 id="revealing-poison-scouting">Revealing Poison (Scouting)</h3>
 <p>To reveal the <code>is_poison</code> status, you must use the <strong>Scout</strong> ability.</p>
 <ul>
 <li><strong>Ability</strong>: <code>SCOUT</code></li>
-<li><strong>Range</strong>: 4 tiles (Manhattan Distance).</li>
-<li><strong>Effect</strong>: Any algae within <strong>4 tiles</strong> of a bot with the <code>SCOUT</code> ability will have its <code>is_poison</code> field updated to "TRUE" or "FALSE" in your <code>PlayerView</code>.</li>
+<li><strong>Range</strong>: 2 tiles (Manhattan Distance).</li>
+<li><strong>Effect</strong>: Any algae within <strong>2 tiles</strong> of a bot with the <code>SCOUT</code> ability will have its <code>is_poison</code> field updated to "TRUE" or "FALSE" in your <code>PlayerView</code>.</li>
 </ul>
 <div class="admonition important">
 <p class="admonition-title">Important</p>

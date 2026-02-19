@@ -1252,12 +1252,12 @@
 <p>Banks are locations where collected algae must be deposited to score points.</p>
 <ul>
 <li><strong>Functionality</strong>: Bots with the harvest ability can deposit algae they are carrying into a bank.</li>
-<li><strong>Deposit Range</strong>: A bot must be within <strong>2 units</strong> of a bank to deposit.</li>
-<li><strong>Deposit Time</strong>: Depositing takes <strong>50 ticks</strong>, during which the bank is susceptible to being lockpicked by a bot with the lockpick ability.</li>
+<li><strong>Deposit Range</strong>: A bot must be within <strong>1 unit</strong> of a bank to deposit.</li>
+<li><strong>Deposit Time</strong>: The first bot to perform a deposit starts a <strong>50 ticks</strong> timer during which the bank is susceptible to being lockpicked by a bot with the lockpick ability. While a bank is undergoing a deposit, other harvesters of yours can also perform a deposit without affecting the final deposit time. </li>
 </ul>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>A bot with the lockpick ability can steal the algae which is being deposited into the bank by the enemy player. This action takes 10 ticks (continuously, if the lockpick is interrupted in the middle, it needs to start again for 10 ticks).</p>
+<p>A bot with the LOCKPICK ability can steal the algae which is being deposited into the bank by the enemy player. This action takes 10 ticks (continuously, if the lockpick is interrupted in the middle, it needs to start again for 10 ticks).</p>
 </div>
 <ul>
 <li><strong>Ownership</strong>: There are two banks in each player's half of the map. The two banks closest to you are owned by you, and the two banks closest to your opponent are owned by the opponent. You can <strong>only deposit algae in a bank you own</strong>. Conversely, you can <strong>only lockpick an opponent's bank</strong>.</li>
