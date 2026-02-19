@@ -95,6 +95,9 @@ The `act()` method is the heart of your bot. It runs every tick. Our logic follo
 ## 4. The Spawn Policy
 Finally, we tell the engine to create our bots.
 
+!!! bug "Spawn Policy" 
+    This function must be declared at the top level of the file and named `spawn_policy`. Your code will not run if this is not present.
+
 ```python linenums="54" hl_lines="8"
 def spawn_policy(gameAPI: GameAPI):
     # Spawn a harvester in every tick

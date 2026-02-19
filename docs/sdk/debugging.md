@@ -3,7 +3,7 @@
 ## Runtime Logs
 The game engine captures standard output (`stdout`) and standard error (`stderr`).
 
-*   **Stdout**: Used for game communication (do not print random text here, it might break the protocol).
+*   **Stdout**: Used for game communication.
 *   **Stderr**: Use `sys.stderr` for debugging information.
 
 ```python linenums="1"

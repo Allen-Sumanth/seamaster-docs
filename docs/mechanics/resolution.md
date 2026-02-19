@@ -1,49 +1,35 @@
 # Resolution Rules
 
-The game engine resolves actions in a specific order. Understanding this is key to winning "tie-breaks".
+The game engine resolves turns in distinct phases. Understanding the order of operations is crucial for predicting game states.
 
-## Turn Order
-The Game Loop processes a tick in this order:
+## Turn Order...
+
+The Game Loop processes a tick in the following order:
 
 1.  **Spawning**: New bots are created.
-    *   If a spawn location is occupied, the spawn **fails**.
-2.  **Actions**: Existing bots execute their commands.
-    *   Iterates through all bots.
-3.  **Entity Updates**: Banks and Energy Pads update their timers.
-4.  **Win Check**: Victory conditions are checked.
+2.  **Movement**: Bot movement is resolved.
+3.  **Actions**: Non-movement actions (HARVEST, SELFDESTRUCT, etc.) are validated and executed.
+4.  **Entity Updates**: Banks and Energy Pads update their timers.
+5.  **Win Check**: Victory conditions are checked.
 
-## Action Resolution
-The engine resolves actions based on a strict priority system. When multiple bots attempt actions in the same tick, they are processed in the following order:
+## Movement Phase
 
-??? info
-    Each bot can only perform one move per tick. Some actions, such as `HARVEST` and `LOCKPICK`, have an option where the bot can move to a location and perform the action, essentially allowing the bot to perform two 'actions' (move and harvest/lockpick) in the same tick.
+Movement is resolved simultaneously for all bots but calculated iteratively to handle collisions and chains.
+If multiple bots attempt to move into the *same* target tile:
+*   **Random Winner**: One bot is randomly selected to succeed.
+*   **Cancellation**: All other bots attempting to enter that tile will have their moves cancelled and will stay in their current positions.
 
-### 1. Priority Tiers
-Actions with higher priority numbers are resolved first.
 
-| Priority | Action |
-| :--- | :--- |
-| **6** | `SELFDESTRUCT` |
-| **5** | `HARVEST` |
-| **4** | `POISON` |
-| **3** | `DEPOSIT` |
-| **2** | `LOCKPICK` |
-| **1** | `MOVE` |
+## Action Phase
+Non-movement actions are processed before movement. This includes:
+*   `HARVEST`
+*   `SELFDESTRUCT`
+*   `POISON`
+*   `LOCKPICK`
+*   `DEPOSIT`
 
-### 2. Tie-Breakers
-If multiple bots want to perform actions with the **same priority** (e.g., two bots trying to Move into the same tile), the engine resolves the conflict using these tie-breakers, in order:
+If an action is valid, the energy cost is deducted immediately. If invalid, the bot pays a penalty.
 
-1.  **Energy**: Bot with **Higher Energy** goes first.
-2.  **Age**: Bot that was **Spawned Earlier** (lower Bot ID) goes first.
-3.  **Random**: If Energy and Age are identical, it is determined randomly.
-
-## Collision
-*   **Bots cannot share a tile.**
-*   **Bots cannot move through each other.**
-*   **Bots cannot swap places** directly in one tick (head-on collision).
-
-## Timeout & Errors
-*   **Time Limit**: Your code has a limited time to respond (e.g., 20ms - 100ms per tick).
-*   **Timeout**: If you exceed the limit, your turn is skipped.
-*   **Crash**: If your code throws an exception, your turn is skipped.
-*   **Disqualification**: Too many consecutive errors/timeouts will disqualify you from the match.
+## Energy Costs
+*   **Success**: If a move is successful, `TraversalCost` is deducted.
+*   **Failure**: If a move is cancelled due to collision or contention, but the bot *attempted* to move, a small penalty is deducted (instead of the full traversal cost).
