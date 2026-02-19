@@ -773,77 +773,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#abilities" class="md-nav__link">
+  <a href="#passive-abilities" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Abilities
+        Passive Abilities
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Abilities">
+    <nav class="md-nav" aria-label="Passive Abilities">
       <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#harvest_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Harvest
-      
-    </span>
-  </a>
-  
-</li>
         
           <li class="md-nav__item">
   <a href="#scout" class="md-nav__link">
     <span class="md-ellipsis">
       
         Scout
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#self-destruct_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Self-Destruct
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#lockpick_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Lockpick
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#speed-boost" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Speed Boost
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#poison_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Poison
       
     </span>
   </a>
@@ -1385,12 +1330,16 @@
 
 
 <h1 id="actions-abilities">Actions &amp; Abilities</h1>
-<p>Every tick, each of your bots can perform <strong>one</strong> action.</p>
+<p>Every tick, each of your bots can perform upto <strong>one</strong> action and/or <strong>one</strong> movement.</p>
+<div class="admonition note">
+<p class="admonition-title">Move + Action</p>
+<p>Action is performed at the final location of the bot after accounting for collisions.</p>
+</div>
 <h2 id="energy-scrap-costs">Energy &amp; Scrap Costs</h2>
 <h3 id="energy-costs">Energy Costs</h3>
 <p>Bots consume energy for movement and actions.</p>
 <ul>
-<li><strong>Base Movement Cost</strong>: 2 HP per move.</li>
+<li><strong>Base Movement Cost</strong>: 2 energy per move.</li>
 </ul>
 <table>
 <thead>
@@ -1487,11 +1436,11 @@
 <h2 id="actions">Actions</h2>
 <p>Your bots can perform the following physical actions on the board:</p>
 <h3 id="move">Move</h3>
-<p>Bots can move in cardinal directions: <code>NORTH</code>, <code>SOUTH</code>, <code>EAST</code>, <code>WEST</code>.</p>
+<p>Bots can move in cardinal directions: <code>NORTH</code>, <code>SOUTH</code>, <code>EAST</code>, <code>WEST</code>. There's an additional <code>NULL</code> direction which is especially useful when the bot does not have to move but perform an action.</p>
 <ul>
-<li><strong>Cost</strong>: 2 Energy per move.</li>
+<li><strong>Energy Cost</strong>: Base cost 2 energy + cumulative ability traversal cost per move.</li>
 <li><strong>Speed</strong>: 1 tile per tick.</li>
-<li><strong>Associated Ability</strong>: <code>Speed Boost</code> (Doubles speed, reduces energy cost).</li>
+<li><strong>Associated Ability</strong>: <code>SPEEDBOOST</code> (Doubles speed, reduces energy cost).</li>
 </ul>
 <details class="example">
 <summary>Movement Example</summary>
@@ -1511,17 +1460,12 @@
 <h3 id="harvest">Harvest</h3>
 <ul>
 <li><strong>Action</strong>: <code>HARVEST</code></li>
-<li><strong>Requirement</strong>: Must be on top of an Algae tile.</li>
+<li><strong>Requirement</strong>: Must be on top of an algae tile or in one block radius.</li>
 <li><strong>Effect</strong>: Removes algae from board, adds +1 to inventory.</li>
 <li><strong>Energy Cost</strong>: 1 Energy.</li>
-<li><strong>Associated Ability</strong>: <code>Harvest</code> (Required to perform action).</li>
+<li><strong>Associated Ability</strong>: <code>HARVEST</code> (Required to perform action).</li>
 <li><strong>Warning</strong>: Harvesting <strong>Poisonous Algae</strong> kills the bot instantly.</li>
-<li><strong>Move + Harvest</strong>: You can specify a <code>direction</code> to move and harvest in the same tick. The bot moves one step in the <code>direction</code> and attempts to harvest at the <em>new</em> location.</li>
 </ul>
-<div class="admonition note">
-<p class="admonition-title">Python Library Update</p>
-<p>The Python library is currently being updated to support the optional <code>direction</code> parameter for <code>harvest</code>, <code>lockpick</code>, and <code>poison</code>.</p>
-</div>
 <details class="example">
 <summary>Harvesting Example</summary>
 <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-1-1">1</a></span>
@@ -1541,8 +1485,8 @@
 <ul>
 <li><strong>Action</strong>: <code>DEPOSIT</code></li>
 <li><strong>Requirement</strong>: Must be within range of a <strong>Bank</strong> you own.</li>
-<li><strong>Effect</strong>: Starts a deposit timer (100 ticks). If effective, converts inventory to score.</li>
-<li><strong>Vulnerability</strong>: While depositing, you are immovable and vulnerable to theft.</li>
+<li><strong>Effect</strong>: Starts a deposit timer (50 ticks). Upon completition, the algae is permanently deposited to the player owning the deposit.</li>
+<li><strong>Vulnerability</strong>: While depositing is instant, the bank is vulnerable to lockpick attempts.</li>
 <li><strong>Associated Ability</strong>: <code>Harvest</code> (implied, as you need to harvest to deposit).</li>
 </ul>
 <details class="example">
@@ -1564,20 +1508,22 @@
 <ul>
 <li><strong>Action</strong>: <code>SELFDESTRUCT</code></li>
 <li><strong>Requirement</strong>: <code>Ability.SELF_DESTRUCT</code></li>
-<li><strong>Effect</strong>: The bot explodes, destroying itself and <strong>all bots</strong> (friend or foe) within a <strong>1-tile radius</strong> (3x3 area).</li>
+<li><strong>Effect</strong>: The bot explodes, destroying itself and <strong>all bots</strong> (friend or foe) within a <strong>1-tile radius</strong> (3x3 area) without an account for the bot movement.</li>
 <li><strong>Energy Cost</strong>: 0.5 Energy.</li>
-<li><strong>Associated Ability</strong>: <code>Self-Destruct</code> (Required to perform action).</li>
+<li><strong>Associated Ability</strong>: <code>SELFDESTRUCT</code> (Required to perform action).</li>
 <li><strong>Counter</strong>: <code>Shield</code> ability.</li>
 </ul>
 <h3 id="lockpick">Lockpick</h3>
 <ul>
 <li><strong>Action</strong>: <code>LOCKPICK</code></li>
-<li><strong>Requirement</strong>: Must be adjacent to a Bank where an enemy is depositing.</li>
+<li><strong>Requirement</strong>: Must be in <strong>one</strong> block radius of a Bank undergoing deposition for <strong>20</strong> ticks.</li>
 <li><strong>Effect</strong>: Steals the deposit.</li>
-<li><strong>Risk</strong>: The Lockpick bot <strong>dies</strong> after the theft is complete (Suicide mission).</li>
-<li><strong>Move + Lockpick</strong>: You can initiate a lockpick on a bank from an adjacent tile. The bot moves adjacent to the bank and begins the lockpick in the same tick.</li>
-<li><strong>Associated Ability</strong>: <code>Lockpick</code> (Required to perform action).</li>
+<li><strong>Associated Ability</strong>: <code>LOCKPICK</code> (Required to perform action).</li>
 </ul>
+<div class="admonition note">
+<p class="admonition-title">Lockpick</p>
+<p>Lockpick is immediately canceled upon leaving the one bot radius or death.</p>
+</div>
 <details class="example">
 <summary>Lockpick Example</summary>
 <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-3-1">1</a></span>
@@ -1596,11 +1542,10 @@
 <h3 id="poison">Poison</h3>
 <ul>
 <li><strong>Action</strong>: <code>POISON</code></li>
-<li><strong>Requirement</strong>: Must be on top of an Algae tile.</li>
+<li><strong>Requirement</strong>: Bot must be within <strong>1</strong> block radius.</li>
 <li><strong>Effect</strong>: Turns the algae into <strong>Poisonous Algae</strong>.</li>
 <li><strong>Energy Cost</strong>: 2 Energy.</li>
-<li><strong>Associated Ability</strong>: <code>Poison</code> (Required to perform action).</li>
-<li><strong>Move + Poison</strong>: You can specify a <code>direction</code> to move and poison in the same tick.</li>
+<li><strong>Associated Ability</strong>: <code>POISON</code> (Required to perform action).</li>
 </ul>
 <details class="example">
 <summary>Poison Example</summary>
@@ -1618,40 +1563,17 @@
 </span></code></pre></div></td></tr></table></div>
 </details>
 <hr />
-<h2 id="abilities">Abilities</h2>
-<p>Abilities are special upgrades or traits that your bots can possess:</p>
-<h3 id="harvest_1">Harvest</h3>
-<ul>
-<li><strong>Description</strong>: Allows the bot to harvest algae and deposit it at banks.</li>
-<li><strong>Note</strong>: Essential for scoring.</li>
-</ul>
+<h2 id="passive-abilities">Passive Abilities</h2>
+<p>Passive Abilities provide permanent boost/upgrades.</p>
 <h3 id="scout">Scout</h3>
 <ul>
 <li><strong>Description</strong>: Reveals the <code>is_poison</code> status of all algae within a <strong>4-tile radius</strong>.</li>
 <li><strong>Note</strong>: Without this ability (or proximity), algae status remains "UNKNOWN". Only bots with the <strong>Scout</strong> ability can distinguish Poisonous Algae from Safe Algae. Global vision gives you coordinates, but Scouting gives you safety.</li>
 </ul>
-<h3 id="self-destruct_1">Self-Destruct</h3>
-<ul>
-<li><strong>Description</strong>: Allows the bot to self-destruct, dealing area damage.</li>
-</ul>
-<h3 id="lockpick_1">Lockpick</h3>
-<ul>
-<li><strong>Description</strong>: Allows the bot to steal deposits from enemy banks.</li>
-</ul>
-<h3 id="speed-boost">Speed Boost</h3>
-<ul>
-<li><strong>Description</strong>: Increases movement speed and efficiency.</li>
-<li><strong>Effect</strong>: Movement speed doubled (2 tiles per tick).</li>
-<li><strong>Energy Cost</strong>: 1 Energy per move (More efficient!).</li>
-</ul>
-<h3 id="poison_1">Poison</h3>
-<ul>
-<li><strong>Description</strong>: Allows the bot to poison algae tiles, creating traps for enemy bots.</li>
-</ul>
 <h3 id="shield">Shield</h3>
 <ul>
 <li><strong>Description</strong>: Passive protection against damage.</li>
-<li><strong>Effect</strong>: If hit by a <code>SelfDestruct</code> or other damage, the shield breaks instead of the bot dying. The bot loses the Shield ability but survives.</li>
+<li><strong>Effect</strong>: If hit by a <code>SELFDESTRUCT</code> or other damage, the shield breaks instead of the bot dying. The bot loses the Shield ability but survives.</li>
 <li><strong>Side Effect</strong>: Shield increases movement energy cost by <strong>0.25</strong>.</li>
 </ul>
 

@@ -682,7 +682,7 @@
   <a href="#turn-order" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Turn Order
+        Turn Order...
       
     </span>
   </a>
@@ -690,49 +690,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#action-resolution" class="md-nav__link">
+  <a href="#movement-phase" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Action Resolution
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Action Resolution">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#1-priority-tiers" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        1. Priority Tiers
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#2-tie-breakers" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        2. Tie-Breakers
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#collision" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Collision
+        Movement Phase
       
     </span>
   </a>
@@ -740,10 +701,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#timeout-errors" class="md-nav__link">
+  <a href="#action-phase" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Timeout &amp; Errors
+        Action Phase
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#energy-costs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Energy Costs
       
     </span>
   </a>
@@ -1241,82 +1213,33 @@
 
 
 <h1 id="resolution-rules">Resolution Rules</h1>
-<p>The game engine resolves actions in a specific order. Understanding this is key to winning "tie-breaks".</p>
-<h2 id="turn-order">Turn Order</h2>
-<p>The Game Loop processes a tick in this order:</p>
+<p>The game engine resolves turns in distinct phases. Understanding the order of operations is crucial for predicting game states.</p>
+<h2 id="turn-order">Turn Order...</h2>
+<p>The Game Loop processes a tick in the following order:</p>
 <ol>
-<li><strong>Spawning</strong>: New bots are created.<ul>
-<li>If a spawn location is occupied, the spawn <strong>fails</strong>.</li>
-</ul>
-</li>
-<li><strong>Actions</strong>: Existing bots execute their commands.<ul>
-<li>Iterates through all bots.</li>
-</ul>
-</li>
+<li><strong>Spawning</strong>: New bots are created.</li>
+<li><strong>Movement</strong>: Bot movement is resolved.</li>
+<li><strong>Actions</strong>: Non-movement actions (HARVEST, SELFDESTRUCT, etc.) are validated and executed.</li>
 <li><strong>Entity Updates</strong>: Banks and Energy Pads update their timers.</li>
 <li><strong>Win Check</strong>: Victory conditions are checked.</li>
 </ol>
-<h2 id="action-resolution">Action Resolution</h2>
-<p>The engine resolves actions based on a strict priority system. When multiple bots attempt actions in the same tick, they are processed in the following order:</p>
-<details class="info">
-<summary>Info</summary>
-<p>Each bot can only perform one move per tick. Some actions, such as <code>HARVEST</code> and <code>LOCKPICK</code>, have an option where the bot can move to a location and perform the action, essentially allowing the bot to perform two 'actions' (move and harvest/lockpick) in the same tick.</p>
-</details>
-<h3 id="1-priority-tiers">1. Priority Tiers</h3>
-<p>Actions with higher priority numbers are resolved first.</p>
-<table>
-<thead>
-<tr>
-<th style="text-align: left;">Priority</th>
-<th style="text-align: left;">Action</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align: left;"><strong>6</strong></td>
-<td style="text-align: left;"><code>SELFDESTRUCT</code></td>
-</tr>
-<tr>
-<td style="text-align: left;"><strong>5</strong></td>
-<td style="text-align: left;"><code>HARVEST</code></td>
-</tr>
-<tr>
-<td style="text-align: left;"><strong>4</strong></td>
-<td style="text-align: left;"><code>POISON</code></td>
-</tr>
-<tr>
-<td style="text-align: left;"><strong>3</strong></td>
-<td style="text-align: left;"><code>DEPOSIT</code></td>
-</tr>
-<tr>
-<td style="text-align: left;"><strong>2</strong></td>
-<td style="text-align: left;"><code>LOCKPICK</code></td>
-</tr>
-<tr>
-<td style="text-align: left;"><strong>1</strong></td>
-<td style="text-align: left;"><code>MOVE</code></td>
-</tr>
-</tbody>
-</table>
-<h3 id="2-tie-breakers">2. Tie-Breakers</h3>
-<p>If multiple bots want to perform actions with the <strong>same priority</strong> (e.g., two bots trying to Move into the same tile), the engine resolves the conflict using these tie-breakers, in order:</p>
-<ol>
-<li><strong>Energy</strong>: Bot with <strong>Higher Energy</strong> goes first.</li>
-<li><strong>Age</strong>: Bot that was <strong>Spawned Earlier</strong> (lower Bot ID) goes first.</li>
-<li><strong>Random</strong>: If Energy and Age are identical, it is determined randomly.</li>
-</ol>
-<h2 id="collision">Collision</h2>
+<h2 id="movement-phase">Movement Phase</h2>
+<p>Movement is resolved simultaneously for all bots but calculated iteratively to handle collisions and chains.
+If multiple bots attempt to move into the <em>same</em> target tile:
+*   <strong>Random Winner</strong>: One bot is randomly selected to succeed.
+*   <strong>Cancellation</strong>: All other bots attempting to enter that tile will have their moves cancelled and will stay in their current positions.</p>
+<h2 id="action-phase">Action Phase</h2>
+<p>Non-movement actions are processed before movement. This includes:
+*   <code>HARVEST</code>
+*   <code>SELFDESTRUCT</code>
+*   <code>POISON</code>
+*   <code>LOCKPICK</code>
+*   <code>DEPOSIT</code></p>
+<p>If an action is valid, the energy cost is deducted immediately. If invalid, the bot pays a penalty.</p>
+<h2 id="energy-costs">Energy Costs</h2>
 <ul>
-<li><strong>Bots cannot share a tile.</strong></li>
-<li><strong>Bots cannot move through each other.</strong></li>
-<li><strong>Bots cannot swap places</strong> directly in one tick (head-on collision).</li>
-</ul>
-<h2 id="timeout-errors">Timeout &amp; Errors</h2>
-<ul>
-<li><strong>Time Limit</strong>: Your code has a limited time to respond (e.g., 20ms - 100ms per tick).</li>
-<li><strong>Timeout</strong>: If you exceed the limit, your turn is skipped.</li>
-<li><strong>Crash</strong>: If your code throws an exception, your turn is skipped.</li>
-<li><strong>Disqualification</strong>: Too many consecutive errors/timeouts will disqualify you from the match.</li>
+<li><strong>Success</strong>: If a move is successful, <code>TraversalCost</code> is deducted.</li>
+<li><strong>Failure</strong>: If a move is cancelled due to collision or contention, but the bot <em>attempted</em> to move, a small penalty is deducted (instead of the full traversal cost).</li>
 </ul>
 
 
