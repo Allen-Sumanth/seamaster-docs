@@ -10,6 +10,7 @@ Accessible inside `act()` via `self.ctx`. Provides a read-only interface to the 
 *   `get_algae_held()`: Returns amount of algae held (int).
 *   `get_type()`: Returns list of abilities (alias for `get_abilities`).
 *   `spawn_cost(abilities)`: Returns the scrap cost to spawn a bot with given abilities (int).
+*   `api`: The `GameAPI` instance (see [GameAPI](game_api.md)).
 
 #### Example
 ```python linenums="1"

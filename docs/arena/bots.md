@@ -23,7 +23,7 @@ class Bot:
 *   **location**: Current coordinates (`x`, `y`) on the board.
 !!! note
     The location of the bot is a Point object, which points to its abosulte position in the board. Refer to [Board Coordinates](../arena/board.md#coordinates) for more details.
-*   **energy**: Current energy level. Max 50. Dropping to 0 prevents actions.
+*   **energy**: Current energy level. Max 100. Dropping to 0 prevents actions.
 *   **scraps**: The amount of scraps this bot is "worth" (the cost to spawn it). This value is used for scoring/rewards when destroyed.
 *   **abilities**: List of abilities equipped on this bot (e.g., `["HARVEST", "SPEEDBOOST"]`).
 *   **algae_held**: Current number of algae in inventory. Max 5.

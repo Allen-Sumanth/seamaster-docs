@@ -2,6 +2,14 @@
 
 **Seawars** is a competitive programming game where you write code to control bots in a real-time strategic battle. Your goal is to harvest algae, manage your economy, and outsmart your opponent's algorithm.
 
+!!! abstract "Notice Board"
+    *   The Python library has been updated! Update your local copy of the library with
+    ```bash
+    pip install --upgrade seamaster
+    ```
+    *   The default maximum health of a bot has been increased from **50** to **100**. Please update your bots to account for this change.
+    *   The Lurker and Saboteur template bots are currently under development. Check [Writing Bots](sdk/writing_bots.md) for more details.
+
 ## The Objective
 
 You are the commander of a fleet of automated bots. Your mission is to dominate the ocean grid by:
