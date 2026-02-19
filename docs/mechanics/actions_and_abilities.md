@@ -15,9 +15,9 @@ Bots consume energy for movement and actions.
 | Ability | Traversal Modifier (per move) | Action Cost (on use) |
 | :--- | :--- | :--- |
 | **Harvest** | +0 | 1 |
-| **Scout** | +1.5 | 0 |
+| **Scout** | +3 | 0 |
 | **Self-Destruct** | +0.5 | 0 |
-| **Speed Boost** | +1 | 0 |
+| **Speed Boost** | +0.5 | 1 |
 | **Poison** | +0.5 | 2 |
 | **Lockpick** | +1.5 | 0 |
 | **Shield** | +0.25 | 0 |
