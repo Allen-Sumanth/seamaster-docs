@@ -20,7 +20,7 @@ Algae is the primary resource in Seawars. It spawns randomly at the start of the
 
     def act(self):
         # Access list of all algae
-        all_algae = self.ctx.player_view.visible_entities.algae
+        all_algae = self.ctx.api.visible_algae()
         
         for algae in all_algae:
             if algae.is_poison == AlgaeType.FALSE:
@@ -52,9 +52,9 @@ Energy pads are special locations that refill a bot's energy.
 ??? example "Checking Energy Pad Availability"
     ```python linenums="1"
     def act(self):
-        pads = self.ctx.player_view.permanent_entities.energy_pads
+        pads = self.ctx.get_energy_pads()
         
-        for pad in pads.values():
+        for pad in pads:
             if pad.available:
                 print(f"Pad at {pad.location} is ready!")
             else:

@@ -9,12 +9,19 @@ Your bot logic receives a `PlayerView` object each tick. This object serves as t
 ??? example "Accessing PlayerView"
     ```python linenums="1"
     def act(self):
-        # Access the view via self.ctx.player_view
-        view = self.ctx.player_view
+        # Access the view via self.ctx.api.view
+        playerview = self.ctx.api.view
         
-        print(f"Current Tick: {view.tick}")
-        print(f"My Scraps: {view.scraps}")
+        print(f"Current Tick: {playerview.tick}")
+        print(f"My Scraps: {playerview.scraps}")
+
+        # Alternatively, use the helper functions in gameAPI
+        print(f"Current Tick: {self.ctx.api.get_tick()}")
+        print(f"My Scraps: {self.ctx.api.get_scraps()}")
     ```
+
+!!! note "Indirect Access Preferred"
+    In most cases, you do not need to interact with the `PlayerView` object directly. The helper functions provided in [GameAPI](../api_reference/game_api.md), [BotContext](../api_reference/bot_context.md), and [Utilities](../api_reference/utilities.md) cover almost all common use cases (finding nearest entities, pathfinding, checking global stats, etc.). Use the raw `playerview` only when you need custom filtering or data not exposed by the helper methods.
 
 ### Global Fields
 *   **tick**: Current game tick (0 to 500).
@@ -32,9 +39,10 @@ The `visible_entities` field contains dynamic objects on the board.
 ??? example "Filtering Enemies"
     ```python linenums="1"
     from seamaster.constants import Ability
+    from seamaster.models import EnemyBot
 
     def act(self):
-        enemies = self.ctx.player_view.visible_entities.enemies
+        enemies: list[EnemyBot] = self.ctx.api.view.visible_entities.enemies
         
         # Find enemies carrying algae
         rich_enemies = [e for e in enemies if e.algae_held > 0]
@@ -133,7 +141,7 @@ To reveal the `is_poison` status, you must use the **Scout** ability.
         
     def act(self):
         # Example: iterate visible algae and check safety
-        for algae in self.ctx.player_view.visible_entities.algae:
+        for algae in self.ctx.api.view.visible_entities.algae:
             if self.is_safe_to_harvest(algae):
                 # Go harvest it...
                 pass

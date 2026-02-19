@@ -6,6 +6,8 @@ Accessible in `spawn_policy(api)`.
 *   `get_tick()`: Returns the current tick of the game (int).
 *   `get_scraps()`: Returns the total scraps available to you (int).
 *   `get_my_bots()`: Returns a list of all bots owned by you (`list[Bot]`).
+*   `get_max_energy()`: Returns the maximum energy capacity of a bot (int).
+*   `view`: The `PlayerView` object holding the complete game state. See [Player View & Perception](../mechanics/perception.md).
 
 ### Sensing
 *   `visible_enemies()`: Returns a list of all visible enemy bots (`list[EnemyBot]`).
