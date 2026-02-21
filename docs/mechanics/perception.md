@@ -120,7 +120,7 @@ Each Algae object in `permanent_entities.algae` has an `is_poison` field with th
 3.  **"FALSE"**: Confirmed Safe. 
 
 !!! note "Poison ability"
-  The algae properties are updated when scouts go near the algae. It does not take into account when the opponent uses their poison ability.
+    The algae properties are updated when scouts go near the algae. It does not take into account when the opponent uses their poison ability.
 
 ### Revealing Poison (Scouting)
 To reveal the `is_poison` status, you must use the **Scout** ability.
