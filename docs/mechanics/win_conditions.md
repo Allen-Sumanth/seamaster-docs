@@ -7,7 +7,7 @@ If at any point a player has permanently deposited **> 50%** of the total algae 
 *   **Result**: Immediate Victory.
 
 ## 2. Time Limit
-If the game reaches **1000 Ticks**:
+If the game reaches **500 Ticks**:
 
 *   The game ends.
 *   **Winner**: Information based on **Permanent Algae** count.

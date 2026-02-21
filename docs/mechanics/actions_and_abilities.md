@@ -103,7 +103,7 @@ Bots can move in cardinal directions: `NORTH`, `SOUTH`, `EAST`, `WEST`. There's 
 
 ### Lockpick
 *   **Action**: `LOCKPICK`
-*   **Requirement**: Must be in **one** block radius of a Bank undergoing deposition for **20** ticks.
+*   **Requirement**: Must be in **one** block radius of a Bank undergoing deposition for **10** ticks.
 *   **Effect**: Steals the deposit.
 *   **Associated Ability**: `LOCKPICK` (Required to perform action).
 
@@ -143,8 +143,8 @@ Bots can move in cardinal directions: `NORTH`, `SOUTH`, `EAST`, `WEST`. There's 
 Passive Abilities provide permanent boost/upgrades.
 
 ### Scout
-*   **Description**: Reveals the `is_poison` status of all algae within a **4-tile radius**.
-*   **Note**: Without this ability (or proximity), algae status remains "UNKNOWN". Only bots with the **Scout** ability can distinguish Poisonous Algae from Safe Algae. Global vision gives you coordinates, but Scouting gives you safety.
+*   **Description**: Reveals the `is_poison` status of all algae within a **2-tile radius** (Manhattan radius).
+*   **Note**: Without this ability (or proximity), algae status remains "UNKNOWN". Only bots with the **Scout** ability can distinguish Poisonous Algae from Safe Algae. Global vision gives you coordinates, but scouting gives you safety.
 
 ### Shield
 *   **Description**: Passive protection against damage.
