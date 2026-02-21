@@ -701,7 +701,7 @@
   <a href="#turn-order" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Turn Order...
+        Turn Order
       
     </span>
   </a>
@@ -709,10 +709,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#movement-phase" class="md-nav__link">
+  <a href="#action-priority" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Movement Phase
+        Action Priority
       
     </span>
   </a>
@@ -720,10 +720,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#action-phase" class="md-nav__link">
+  <a href="#movement-resolution" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Action Phase
+        Movement Resolution
       
     </span>
   </a>
@@ -1260,28 +1260,32 @@
 
 <h1 id="resolution-rules">Resolution Rules</h1>
 <p>The game engine resolves turns in distinct phases. Understanding the order of operations is crucial for predicting game states.</p>
-<h2 id="turn-order">Turn Order...</h2>
+<h2 id="turn-order">Turn Order</h2>
 <p>The Game Loop processes a tick in the following order:</p>
 <ol>
 <li><strong>Spawning</strong>: New bots are created.</li>
-<li><strong>Movement</strong>: Bot movement is resolved.</li>
-<li><strong>Actions</strong>: Non-movement actions (HARVEST, SELFDESTRUCT, etc.) are validated and executed.</li>
+<li><strong>Action Resolution</strong>: All actions (including movement) submitted by clients are sorted by priority and executed.</li>
 <li><strong>Entity Updates</strong>: Banks and Energy Pads update their timers.</li>
 <li><strong>Win Check</strong>: Victory conditions are checked.</li>
 </ol>
-<h2 id="movement-phase">Movement Phase</h2>
-<p>Movement is resolved simultaneously for all bots but calculated iteratively to handle collisions and chains.
-If multiple bots attempt to move into the <em>same</em> target tile:
-*   <strong>Random Winner</strong>: One bot is randomly selected to succeed.
-*   <strong>Cancellation</strong>: All other bots attempting to enter that tile will have their moves cancelled and will stay in their current positions.</p>
-<h2 id="action-phase">Action Phase</h2>
-<p>Non-movement actions are processed before movement. This includes:
-*   <code>HARVEST</code>
-*   <code>SELFDESTRUCT</code>
-*   <code>POISON</code>
-*   <code>LOCKPICK</code>
-*   <code>DEPOSIT</code></p>
+<h2 id="action-priority">Action Priority</h2>
+<p>The current logic sorts all the actions that come to the backend and executes them in the following order (highest number first):</p>
+<ol>
+<li><strong><code>SELFDESTRUCT</code></strong> (Priority: 6)</li>
+<li><strong><code>HARVEST</code></strong> (Priority: 5)</li>
+<li><strong><code>POISON</code></strong> (Priority: 4)</li>
+<li><strong><code>DEPOSIT</code></strong> (Priority: 3)</li>
+<li><strong><code>LOCKPICK</code></strong> (Priority: 2)</li>
+<li><strong><code>MOVE</code></strong> (Priority: 1)</li>
+</ol>
 <p>If an action is valid, the energy cost is deducted immediately. If invalid, the bot pays a penalty.</p>
+<h2 id="movement-resolution">Movement Resolution</h2>
+<p>Since <code>MOVE</code> has the lowest priority, it is resolved after all other actions. Movement is resolved simultaneously for all bots but calculated iteratively to handle collisions and chains.</p>
+<p>If multiple bots attempt to move into the <em>same</em> target tile:</p>
+<ul>
+<li><strong>Random Winner</strong>: One bot is randomly selected to succeed.</li>
+<li><strong>Cancellation</strong>: All other bots attempting to enter that tile will have their moves cancelled and will stay in their current positions.</li>
+</ul>
 <h2 id="energy-costs">Energy Costs</h2>
 <ul>
 <li><strong>Success</strong>: If a move is successful, <code>TraversalCost</code> is deducted.</li>
