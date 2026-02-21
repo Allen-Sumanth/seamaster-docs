@@ -35,6 +35,7 @@ nav:
     - Utilities: api_reference/utilities.md
   - Glossary:
     - Glossary: glossary/glossary.md
+  - Changelog: changelog.md
 
 markdown_extensions:
   - attr_list
